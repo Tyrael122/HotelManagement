@@ -1,0 +1,76 @@
+﻿@model WebAppHotel.Models.Entities.Reservation
+@using WebAppHotel.Models.Entities;
+
+@{
+    ViewData["Title"] = "Create";
+    string[] statusOptions = (string[])ViewData["statusOptions"];
+}
+
+<h1>Create</h1>
+
+<h4>Reservation</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="RoomId" class="control-label"></label>
+                <select asp-for="RoomId" class="form-control" id="roomSelect" onchange="updatePrice()">
+                    @foreach (var Room in (Room[])ViewData["Rooms"])
+                    {
+                        <option value=@Room.Id>$@Room.DailyPrice/day - @Room.MaxPeople max people</option>
+                    }
+                </select>
+                <span asp-validation-for="RoomId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CustomerId" class="control-label"></label>
+                <input hidden asp-for="CustomerId" value=@ViewData["CustomerId"] class="form-control">
+                <input disabled value=@ViewData["CustomerName"] class="form-control">
+                <span asp-validation-for="CustomerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CheckIn" class="control-label"></label>
+                <input asp-for="CheckIn" class="form-control" id="checkIn" onchange="updatePrice()"/>
+                <span asp-validation-for="CheckIn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CheckOut" class="control-label"></label>
+                <input asp-for="CheckOut" class="form-control" id="checkOut" onchange="updatePrice()"/>
+                <span asp-validation-for="CheckOut" class="text-danger"></span>
+            </div>
+            <div id="infoBar"></div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input hidden asp-for="Price" class="form-control"/>
+                <input disabled class="form-control" id="totalPrice"/>
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control">
+                    @foreach (string statusOption in statusOptions)
+                    {
+                        <option value=@statusOption>
+                            @statusOption
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script src="~/js/reservation.js" asp-append-version="true"></script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
